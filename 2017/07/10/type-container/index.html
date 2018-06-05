@@ -1,0 +1,867 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java,Type," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="音乐推荐    说明　　本文旨在简单介绍几种可用于盛放Java泛型的类，同时介绍处理类型处理器ResolvableType的基本用法。">
+<meta name="keywords" content="Java,Type">
+<meta property="og:type" content="article">
+<meta property="og:title" content="集中常见的泛型容器与类型处理器">
+<meta property="og:url" content="https://rekadowney.github.io/2017/07/10/type-container/index.html">
+<meta property="og:site_name" content="钟俊滨的博客">
+<meta property="og:description" content="音乐推荐    说明　　本文旨在简单介绍几种可用于盛放Java泛型的类，同时介绍处理类型处理器ResolvableType的基本用法。">
+<meta property="og:updated_time" content="2017-07-10T15:29:03.144Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="集中常见的泛型容器与类型处理器">
+<meta name="twitter:description" content="音乐推荐    说明　　本文旨在简单介绍几种可用于盛放Java泛型的类，同时介绍处理类型处理器ResolvableType的基本用法。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'GTWZ9WWC06',
+      apiKey: '0a972f4735336927f81c335bed7dd344',
+      indexName: 'HexoBlog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"博文搜索","hits_empty":"未发现与 「${query}」相关的内容","hits_stats":"${hits} 篇相关博文，耗时 ${time} 毫秒"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://rekadowney.github.io/2017/07/10/type-container/"/>
+
+
+
+
+
+  <title>集中常见的泛型容器与类型处理器 | 钟俊滨的博客</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fff947c1b3b51e084726a9f72cfd2253";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">钟俊滨的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一个正在努力奋斗的程序猿</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://rekadowney.github.io/2017/07/10/type-container/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="钟俊滨">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://ooo.0o0.ooo/2017/05/22/5922c29806f81.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="钟俊滨的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">集中常见的泛型容器与类型处理器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-10T21:01:14+08:00">
+                2017-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/10/type-container/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/07/10/type-container/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="音乐推荐"><a href="#音乐推荐" class="headerlink" title="音乐推荐"></a>音乐推荐</h2><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=409654891&auto=0&height=66"></iframe>
+
+
+
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>　　本文旨在简单介绍几种可用于盛放<code>Java</code>泛型的类，同时介绍处理类型处理器<code>ResolvableType</code>的基本用法。</p>
+<a id="more"></a>
+<h2 id="TypeReference容器"><a href="#TypeReference容器" class="headerlink" title="TypeReference容器"></a>TypeReference容器</h2><p>　　这里的<code>TypeReference</code>指的是<code>Jackson</code>的<code>com.fasterxml.jackson.core.type.TypeReference</code>，而非<code>MyBatis</code>的<code>org.apache.ibatis.type.TypeReference</code>。在这里，<code>TypeReference</code>作为泛型容器被用于<code>Jackson</code>的<code>json</code>（反）序列化操作。</p>
+<p>　　通常使用<code>com.fasterxml.jackson.core.type.TypeReference#getType</code>方法来得到泛型的<code>Type</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testTypeReference</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    TypeReference&lt;Map&lt;String, List&lt;Integer&gt;&gt;&gt; typeReference =</div><div class="line">            <span class="keyword">new</span> TypeReference&lt;Map&lt;String, List&lt;Integer&gt;&gt;&gt;() &#123;</div><div class="line">            &#125;;</div><div class="line">    Type type = typeReference.getType();</div><div class="line">    System.out.println(type); <span class="comment">// java.util.Map&lt;java.lang.String, java.util.List&lt;java.lang.Integer&gt;&gt;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="ParameterizedTypeReference容器"><a href="#ParameterizedTypeReference容器" class="headerlink" title="ParameterizedTypeReference容器"></a>ParameterizedTypeReference容器</h2><p>　　<code>org.springframework.core.ParameterizedTypeReference</code>常用于<code>Spring</code>的<code>Restful</code>请求响应体解析。其常见方法为：<code>org.springframework.web.client.RestTemplate#exchange(java.net.URI, org.springframework.http.HttpMethod, org.springframework.http.HttpEntity&lt;?&gt;, org.springframework.core.ParameterizedTypeReference&lt;T&gt;)</code>。</p>
+<p>　　通常使用<code>org.springframework.core.ParameterizedTypeReference#getType</code>方法来得到泛型的<code>Type</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testParameterizedTypeReference</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    ParameterizedTypeReference&lt;Map&lt;String, List&lt;Integer&gt;&gt;&gt; parameterizedTypeReference =</div><div class="line">            <span class="keyword">new</span> ParameterizedTypeReference&lt;Map&lt;String, List&lt;Integer&gt;&gt;&gt;() &#123;</div><div class="line">            &#125;;</div><div class="line">    Type type = parameterizedTypeReference.getType();</div><div class="line">    System.out.println(type); <span class="comment">// java.util.Map&lt;java.lang.String, java.util.List&lt;java.lang.Integer&gt;&gt;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="TypeToken"><a href="#TypeToken" class="headerlink" title="TypeToken"></a>TypeToken</h2><p>　　<code>com.google.gson.reflect.TypeToken</code>常用于<code>Gson</code>的<code>json</code>（反）序列化操作，是一个比较顶级的泛型容器，可以通过构造器创建，也可以通过<code>com.google.gson.reflect.TypeToken#get(java.lang.Class&lt;T&gt;)</code>或者<code>com.google.gson.reflect.TypeToken#get(java.lang.reflect.Type)</code>创建对应的泛型容器，而且提供了<code>com.google.gson.reflect.TypeToken#getType</code>方法来获取泛型的<code>Type</code>以及<code>com.google.gson.reflect.TypeToken#getRawType</code>方法获取泛型的<code>Class</code>。是一个功能强大的泛型容器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testTypeToken</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    TypeToken&lt;Map&lt;String, List&lt;Integer&gt;&gt;&gt; typeToken = <span class="keyword">new</span> TypeToken&lt;Map&lt;String, List&lt;Integer&gt;&gt;&gt;() &#123;</div><div class="line">    &#125;;</div><div class="line">    System.out.println(typeToken.getType()); <span class="comment">// java.util.Map&lt;java.lang.String, java.util.List&lt;java.lang.Integer&gt;&gt;</span></div><div class="line">    System.out.println(typeToken.getRawType()); <span class="comment">// interface java.util.Map</span></div><div class="line"></div><div class="line">    ParameterizedTypeImpl type = ParameterizedTypeImpl.make(Map.class,</div><div class="line">            <span class="keyword">new</span> Type[]&#123;String.class, ParameterizedTypeImpl.make(List.class,</div><div class="line">                    <span class="keyword">new</span> Type[]&#123;Integer.class&#125;, <span class="keyword">null</span>)&#125;,</div><div class="line">            <span class="keyword">null</span>);</div><div class="line">    TypeToken token = TypeToken.get(type); <span class="comment">// java.util.Map&lt;java.lang.String, java.util.List&lt;java.lang.Integer&gt;&gt;</span></div><div class="line">    <span class="keyword">assert</span> token.equals(typeToken);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="关于如何获取Type"><a href="#关于如何获取Type" class="headerlink" title="关于如何获取Type"></a>关于如何获取Type</h2><p>　　通过上述的三种泛型容器，可以发现实际上泛型容器都提供某个方法来获取泛型的<code>Type</code>，那么除了借助泛型容器，还有其他方法可以获取泛型的<code>Type</code>吗？</p>
+<p>　　答案是肯定的，第一种方式是通过<code>sun</code>公司提供的方法（一般情况下不建议直接调用<code>sun</code>公司代码），第二种方式由<code>ikidou</code>在<a href="https://github.com/ikidou/TypeBuilder" title="TypeBuidler工具" target="_blank" rel="external"><code>GitHub</code></a>上发布的<code>TypeBuilder</code>创建者工具。</p>
+<h3 id="Sun提供的ParameterizedTypeImpl"><a href="#Sun提供的ParameterizedTypeImpl" class="headerlink" title="Sun提供的ParameterizedTypeImpl"></a>Sun提供的ParameterizedTypeImpl</h3><p>　　<code>sun</code>默认提供的<code>sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl</code>类可以构造<code>Type</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSun</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    ParameterizedTypeImpl integerList =</div><div class="line">            ParameterizedTypeImpl.make(List.class, <span class="keyword">new</span> Type[]&#123;Integer.class&#125;, <span class="keyword">null</span>);</div><div class="line">    ParameterizedType parameterizedType =</div><div class="line">            ParameterizedTypeImpl.make(Map.class, <span class="keyword">new</span> Type[]&#123;String.class, integerList&#125;, <span class="keyword">null</span>);</div><div class="line">    System.out.println(parameterizedType); <span class="comment">// java.util.Map&lt;java.lang.String, java.util.List&lt;java.lang.Integer&gt;&gt;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="ikidou开源的TypeBuilder"><a href="#ikidou开源的TypeBuilder" class="headerlink" title="ikidou开源的TypeBuilder"></a>ikidou开源的TypeBuilder</h3><p>　　通过<code>ikidou</code>分享的<code>TypeBuilder</code>，可以构造复杂的<code>Type</code>，其基本使用为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testTypeBuilder</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    Type type = TypeBuilder.newInstance(Map.class)</div><div class="line">                           .addTypeParam(String.class)</div><div class="line">                           .beginSubType(List.class)</div><div class="line">                           .addTypeParam(Integer.class)</div><div class="line">                           .endSubType()</div><div class="line">                           .build();</div><div class="line">    System.out.println(type);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>　　针对<code>TypeBuilder</code>做了一个简单的类重构，参见：<code>misc-candidate项目 &gt; common模块 &gt; me.junbin.misc.candidate.type.TypeToken</code></p>
+</blockquote>
+<h2 id="类型处理器ResolvableType"><a href="#类型处理器ResolvableType" class="headerlink" title="类型处理器ResolvableType"></a>类型处理器ResolvableType</h2><p>　　<code>Spring</code>提供的<code>org.springframework.core.ResolvableType</code>类可以对<code>Type</code>进行类型解析，同样可以对泛型实现类（诸如<code>XXXDao extends BaseDao&lt;XXX&gt;</code>）进行类型处理。</p>
+<p>　　具体使用方法参考：<code>commons-utility</code>项目测试代码中的<code>me.junbin.commons.spring4.ResolvableTypeTest</code>类或者参考开涛的<a href="https://github.com/zhangkaitao/spring4-showcase/blob/master/spring4-others/src/test/java/com/sishuok/spring4/generic/GenricInjectTest.java" title="ResolvableType使用方法" target="_blank" rel="external"><code>GitHub</code></a>介绍。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/Type/" rel="tag"># Type</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/03/using-protostuff-ser-deser/" rel="next" title="使用Protostuff实现（反）序列化并通用化该过程">
+                <i class="fa fa-chevron-left"></i> 使用Protostuff实现（反）序列化并通用化该过程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://ooo.0o0.ooo/2017/05/22/5922c29806f81.jpg"
+               alt="钟俊滨" />
+          <p class="site-author-name" itemprop="name">钟俊滨</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/RekaDowney" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/rekadowney/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#音乐推荐"><span class="nav-number">1.</span> <span class="nav-text">音乐推荐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#说明"><span class="nav-number">2.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TypeReference容器"><span class="nav-number">3.</span> <span class="nav-text">TypeReference容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ParameterizedTypeReference容器"><span class="nav-number">4.</span> <span class="nav-text">ParameterizedTypeReference容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TypeToken"><span class="nav-number">5.</span> <span class="nav-text">TypeToken</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于如何获取Type"><span class="nav-number">6.</span> <span class="nav-text">关于如何获取Type</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Sun提供的ParameterizedTypeImpl"><span class="nav-number">6.1.</span> <span class="nav-text">Sun提供的ParameterizedTypeImpl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ikidou开源的TypeBuilder"><span class="nav-number">6.2.</span> <span class="nav-text">ikidou开源的TypeBuilder</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类型处理器ResolvableType"><span class="nav-number">7.</span> <span class="nav-text">类型处理器ResolvableType</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">钟俊滨</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://rekadowney.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://rekadowney.github.io/2017/07/10/type-container/';
+          this.page.identifier = '2017/07/10/type-container/';
+          this.page.title = '集中常见的泛型容器与类型处理器';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://rekadowney.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
